@@ -15,6 +15,9 @@ from telebot.types import ReplyKeyboardMarkup
 import datetime
 from tg_bot import bot
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def remind_users():
@@ -24,7 +27,7 @@ def remind_users():
     for user in users:
         try:
             counter += 1
-            if (today - user.created_at).days >= 0:
+            if (today - user.created_at).days >= 0 and int(user.telegram_id) != int(os.getenv('ADMIN_CHAT_ID')):
                 markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
                 markup.add("✅Да", '⚠️Напомнить позже')
                 if not user.hello_message:
