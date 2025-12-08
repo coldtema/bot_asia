@@ -20,8 +20,11 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv('BOT_TOKEN') 
 ADMIN_CHAT_ID = os.getenv('ADMIN_CHAT_ID') 
-CHANNEL_ID = os.getenv('CHANNEL_ID') 
-PDF_PATH = 'Asia_Alliance.pdf'
+CHANNEL_ID = os.getenv('CHANNEL_ID')
+if os.getenv('DEBUG'):
+    PDF_PATH = 'Asia_Alliance.pdf'
+else:
+    PDF_PATH = '/root/bot_asia/Asia_Alliance.pdf'
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
