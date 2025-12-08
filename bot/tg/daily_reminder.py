@@ -22,19 +22,22 @@ def remind_users():
     users = User.objects.filter(survey_passed=False)
     counter = 0
     for user in users:
-        counter += 1
-        if (today - user.created_at).days >= 0:
-            markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
-            markup.add("✅Да", '⚠️Напомнить позже')
-            if not user.hello_message:
-                bot.send_message(user.telegram_id, 'Приветственное сообщение с краткой информацией о компании.')
-                user.hello_message = True
+        try:
+            counter += 1
+            if (today - user.created_at).days >= 0:
+                markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
+                markup.add("✅Да", '⚠️Напомнить позже')
+                if not user.hello_message:
+                    bot.send_message(user.telegram_id, 'Приветственное сообщение с краткой информацией о компании.')
+                    user.hello_message = True
+                    user.save()
+                bot.send_message(user.telegram_id, "Мы проводим анкетирование, ответьте, пожалуйста, на несколько вопросов и получите подарок!", reply_markup=markup)
+                user.state = 'ask_for_survey'
                 user.save()
-            bot.send_message(user.telegram_id, "Мы проводим анкетирование, ответьте, пожалуйста, на несколько вопросов и получите подарок!", reply_markup=markup)
-            user.state = 'ask_for_survey'
-            user.save()
-        if counter % 10 == 0:
-            time.sleep(2)
+            if counter % 10 == 0:
+                time.sleep(2)
+        except Exception as e:
+            print(f"Ошибка при отправке сообщения пользователю {user.telegram_id}: {e}")
 
 if __name__ == "__main__":
     remind_users()
