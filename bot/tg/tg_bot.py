@@ -21,6 +21,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN') 
 ADMIN_CHAT_ID = os.getenv('ADMIN_CHAT_ID') 
 CHANNEL_ID = os.getenv('CHANNEL_ID')
+GROUP_ID = os.getenv('GROUP_ID')
 if os.getenv('DEBUG'):
     PDF_PATH = 'Asia_Alliance.pdf'
 else:
@@ -232,6 +233,7 @@ def handle_ask_budget_to(message):
         types.InlineKeyboardButton(text="🔄 Нет Username", callback_data=f"no_username-{telegram_id}")
     )
     bot.send_message(ADMIN_CHAT_ID, f"Новый клиент: @{user.username}\n\n\n{answers_text}", reply_markup=keyboard)
+    bot.send_message(GROUP_ID, f"Новый клиент: @{user.username}\n\n\n{answers_text}", reply_markup=keyboard)
 
 
 
