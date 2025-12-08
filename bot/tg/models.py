@@ -12,7 +12,10 @@ class User(models.Model):
     username = models.CharField(max_length=150, default="...")
 
     def __str__(self):
-        return str(self.telegram_id)
+        return f'id: {self.telegram_id}, username: {self.username}'
+    
+    def __repr__(self):
+        return f'id: {self.telegram_id}, username: {self.username}'
 
 
 class SurveyAnswer(models.Model):
