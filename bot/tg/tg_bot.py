@@ -92,10 +92,10 @@ def callback_check_subscription(call: types.CallbackQuery):
             message_id=call.message.message_id
         )
         try:
-            bot.send_document(user_id, open(PDF_PATH, "rb"), caption="Вот твой файл 📄")
+            bot.send_document(user_id, open(PDF_PATH, "rb"), caption="Вот твой файл 📄", reply_markup=keyboards.menu)
         except Exception as e:
             logging.error(f"Не удалось отправить PDF: {e}")
-            bot.send_message(user_id, "Произошла ошибка при отправке PDF.")
+            bot.send_message(user_id, "Произошла ошибка при отправке PDF.", reply_markup=keyboards.menu)
 
         bot.answer_callback_query(call.id)
     else:
@@ -224,7 +224,7 @@ def handle_ask_time(message):
         SurveyAnswer.objects.create(user=user, question="⏳ Время?", answer=answer)
         bot.send_photo(
     telegram_id,
-    photo=open('survey.png', 'rb'),
+    photo=open(IMAGE_PATH, 'rb'),
     caption=(
         "<b>Спасибо!</b> У меня уже сложилась картинка по твоему запросу по авто 🙌\n\n"
         "Как и обещали — за прохождение опроса ты получаешь <b>подарок на выбор</b>, "
