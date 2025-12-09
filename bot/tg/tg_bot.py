@@ -254,7 +254,6 @@ def handle_ask_which(message):
         )
     
     SurveyAnswer.objects.create(user=user, question="🚗 Марка/модель?", answer=answer)
-    bot.send_message(telegram_id, "Когда примерно планируешь <b>покупку авто</b>? ⏳\n<i>Это нужно, чтобы корректно подобрать варианты и условия.</i>", reply_markup=keyboards.time_menu, parse_mode='HTML')
     user.survey_passed = True
     user.state = ""
     user.save()
