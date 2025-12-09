@@ -16,6 +16,8 @@ import datetime
 from tg_bot import bot
 import time
 from dotenv import load_dotenv
+import keyboards
+import messages
 
 load_dotenv()
 
@@ -28,13 +30,13 @@ def remind_users():
         try:
             counter += 1
             if (today - user.created_at).days >= 0 and int(user.telegram_id) != int(os.getenv('ADMIN_CHAT_ID')):
-                markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
-                markup.add("✅Да", '⚠️Напомнить позже')
+
                 if not user.hello_message:
-                    bot.send_message(user.telegram_id, 'Приветственное сообщение с краткой информацией о компании.')
+                    bot.send_message(user.telegram_id, messages.hello_message, reply_markup=keyboards.markup, parse_mode='HTML')
                     user.hello_message = True
                     user.save()
-                bot.send_message(user.telegram_id, "Мы проводим анкетирование, ответьте, пожалуйста, на несколько вопросов и получите подарок!", reply_markup=markup)
+                else:
+                    bot.send_message(user.telegram_id, messages.survey_message, reply_markup=keyboards.markup, parse_mode='HTML')
                 user.state = 'ask_for_survey'
                 user.save()
             if counter % 10 == 0:
