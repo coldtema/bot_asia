@@ -113,7 +113,7 @@ def callback_check_subscription(call: types.CallbackQuery):
     int(user_id),
     "У нашего менеджера уже подготовлено подходящее решение для вас 💼\n\n"
     "<b>Пожалуйста, свяжитесь с ним напрямую.</b>\n\n"
-    "Контакт: <b>@Asia_alliance_manager_Julia</b>",
+    "Контакт: <b>@Asia_alliance_manager2</b>",
     parse_mode='HTML'
 )
     bot.edit_message_text(call.message.text + "\n\n⚠️ Пользователь не предоставил username. Отправлено сообщение для связи напрямую.", chat_id=call.message.chat.id, message_id=call.message.message_id)
@@ -141,6 +141,9 @@ def handle_message(message):
 
     elif state == "ask_time":
         return handle_ask_time(message)
+    
+    elif state == "ask_which":
+        return handle_ask_which(message)
     
     elif message.text == '📄Получить PDF-файл':
         return cmd_start(message)
@@ -222,28 +225,40 @@ def handle_ask_time(message):
     answer = message.text
     if answer in ['⚡ В течение месяца', '⏳ 1–3 месяца', '📆 3–6 месяцев', '🔍 Позже / просто изучаю']:
         SurveyAnswer.objects.create(user=user, question="⏳ Время?", answer=answer)
-        bot.send_photo(
-    telegram_id,
-    photo=open(IMAGE_PATH, 'rb'),
-    caption=(
-        "<b>Спасибо!</b> У меня уже сложилась картинка по твоему запросу по авто 🙌\n\n"
-        "Как и обещали — за прохождение опроса ты получаешь <b>подарок на выбор</b>, "
-        "который можно использовать при оформлении привоза авто из Кореи 🎁\n\n"
-        "<i>Выбери, что тебе интереснее, и перешли это сообщение менеджеру:</i>\n"
-        "<b>@Asia_alliance_manager_Julia</b>"
-    ),
-    reply_markup=keyboards.menu,
-    parse_mode='HTML'
-)
-
-        user.survey_passed = True
-        user.state = ""
+        bot.send_message(telegram_id, "Возможно, есть пожелания по <b>марке</b> или <b>модели</b> авто? 🚗", reply_markup=ReplyKeyboardRemove(), parse_mode='HTML')
+        user.state = "ask_which"
         user.save()
     
     else:
         bot.send_message(telegram_id, "Пожалуйста, выберите вариант из клавиатуры.")
         return
+
+
+def handle_ask_which(message):
+    telegram_id = message.from_user.id
+    user = User.objects.get(telegram_id=telegram_id)
+    answer = message.text
+
+    bot.send_photo(
+            telegram_id,
+            photo=open(IMAGE_PATH, 'rb'),
+            caption=(
+                "<b>Спасибо!</b> У меня уже сложилась картинка по твоему запросу по авто 🙌\n\n"
+                "Как и обещали — за прохождение опроса ты получаешь <b>подарок на выбор</b>, "
+                "который можно использовать при оформлении привоза авто из Кореи 🎁\n\n"
+                "<i>Выбери, что тебе интереснее, и перешли это сообщение менеджеру:</i>\n"
+                "<b>@Asia_alliance_manager2</b>"
+            ),
+            reply_markup=keyboards.menu,
+            parse_mode='HTML'
+        )
     
+    SurveyAnswer.objects.create(user=user, question="🚗 Марка/модель?", answer=answer)
+    bot.send_message(telegram_id, "Когда примерно планируешь <b>покупку авто</b>? ⏳\n<i>Это нужно, чтобы корректно подобрать варианты и условия.</i>", reply_markup=keyboards.time_menu, parse_mode='HTML')
+    user.survey_passed = True
+    user.state = ""
+    user.save()
+
     # Отправка в админский чат
     answers = SurveyAnswer.objects.filter(user=user)
     answers_text = "\n\n".join([f"{a.question}: {a.answer}" for a in answers])

@@ -13,7 +13,7 @@ contacts.add(
     InlineKeyboardButton(text="Наш канал", url=f"https://t.me/Asia_Alliance")
 )
 contacts.add(
-    InlineKeyboardButton(text="Менеджер", url=f"https://t.me/Asia_alliance_manager_Julia")
+    InlineKeyboardButton(text="Менеджер", url=f"https://t.me/Asia_alliance_manager2")
 )
 
 
