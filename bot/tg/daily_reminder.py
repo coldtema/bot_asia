@@ -29,7 +29,7 @@ def remind_users():
     for user in users:
         try:
             counter += 1
-            if (today - user.created_at).days >= 0 and int(user.telegram_id) != int(os.getenv('ADMIN_CHAT_ID')):
+            if (today - user.created_at).days >= 4 and int(user.telegram_id) != int(os.getenv('ADMIN_CHAT_ID')):
 
                 if not user.hello_message:
                     bot.send_message(user.telegram_id, messages.hello_message, reply_markup=keyboards.markup, parse_mode='HTML')
