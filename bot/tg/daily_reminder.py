@@ -24,7 +24,7 @@ load_dotenv()
 
 def remind_users():
     today = timezone.now()
-    users = User.objects.filter(survey_passed=False)
+    users = User.objects.filter(survey_passed=False, inactive=False)
     counter = 0
     for user in users:
         try:
@@ -37,11 +37,14 @@ def remind_users():
                     user.save()
                 else:
                     bot.send_message(user.telegram_id, messages.survey_message, reply_markup=keyboards.markup, parse_mode='HTML')
+                print(f"Успешная отправка сообщения пользователю: {user.telegram_id}")
                 user.state = 'ask_for_survey'
                 user.save()
             if counter % 10 == 0:
                 time.sleep(2)
         except Exception as e:
+            user.inactive = True
+            user.save()
             print(f"Ошибка при отправке сообщения пользователю {user.telegram_id}: {e}")
 
 if __name__ == "__main__":

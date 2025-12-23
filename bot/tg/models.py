@@ -10,6 +10,7 @@ class User(models.Model):
     state = models.CharField(max_length=32)
     hello_message = models.BooleanField(default=False)
     username = models.CharField(max_length=150, default="...")
+    inactive = models.BooleanField(default=False)
 
     def __str__(self):
         return f'id: {self.telegram_id}, username: {self.username}'
