@@ -17,6 +17,12 @@ from telebot.types import ReplyKeyboardMarkup, ReplyKeyboardRemove
 import keyboards
 import messages
 
+import telebot.apihelper as apihelper
+
+apihelper.CONNECT_TIMEOUT = 15
+apihelper.READ_TIMEOUT = 300
+
+
 
 load_dotenv()
 
