@@ -66,7 +66,13 @@ def cmd_start(message: types.Message):
         u.save()
         bot.send_message(user_id, "Отлично! Ты подписан ✅\nОтправляю PDF-файл 👇")
         try:
-            bot.send_document(user_id, open(PDF_PATH, "rb"), caption="Вот твой файл 📄", reply_markup=keyboards.menu)
+            with open(PDF_PATH, "rb") as f:
+                bot.send_document(
+                    user_id,
+                    f,
+                    caption="Вот твой файл 📄",
+                    reply_markup=keyboards.menu
+                )
         except Exception as e:
             logging.error(f"Не удалось отправить PDF: {e}")
             bot.send_message(user_id, "Произошла ошибка при отправке PDF.")
