@@ -61,6 +61,7 @@ def cmd_start(message: types.Message):
 
     if user_is_subscribed(user_id):
         u = User.objects.filter(telegram_id=user_id).first()
+        u.state = ""
         u.subscribed = True
         u.save()
         bot.send_message(user_id, "Отлично! Ты подписан ✅\nОтправляю PDF-файл 👇")
