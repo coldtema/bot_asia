@@ -19,12 +19,12 @@ import messages
 
 import telebot.apihelper as apihelper
 
-apihelper.CONNECT_TIMEOUT = 15
-apihelper.READ_TIMEOUT = 300
-
-
-
 load_dotenv()
+
+apihelper.proxy = {
+	'http': os.getenv('PROXY_URL'),
+    'https': os.getenv('PROXY_URL'),
+}
 
 BOT_TOKEN = os.getenv('BOT_TOKEN') 
 ADMIN_CHAT_ID = os.getenv('ADMIN_CHAT_ID') 
@@ -251,20 +251,6 @@ def handle_ask_which(message):
     telegram_id = message.from_user.id
     user = User.objects.get(telegram_id=telegram_id)
     answer = message.text
-
-    bot.send_photo(
-            telegram_id,
-            photo=open(IMAGE_PATH, 'rb'),
-            caption=(
-                "<b>Спасибо!</b> У меня уже сложилась картинка по твоему запросу по авто 🙌\n\n"
-                "Как и обещали — за прохождение опроса ты получаешь <b>подарок на выбор</b>, "
-                "который можно использовать при оформлении привоза авто из Кореи 🎁\n\n"
-                "<i>Выбери, что тебе интереснее, и перешли это сообщение менеджеру:</i>\n"
-                "<b>@Asia_alliance_manager2</b>"
-            ),
-            reply_markup=keyboards.menu,
-            parse_mode='HTML'
-        )
     
     SurveyAnswer.objects.create(user=user, question="🚗 Марка/модель?", answer=answer)
     user.survey_passed = True
@@ -283,6 +269,20 @@ def handle_ask_which(message):
     )
     bot.send_message(ADMIN_CHAT_ID, f"Новый клиент: @{user.username}\n\n\n{answers_text}", reply_markup=keyboard)
     bot.send_message(GROUP_ID, f"Новый клиент: @{user.username}\n\n\n{answers_text}", reply_markup=keyboard)
+
+    bot.send_photo(
+            telegram_id,
+            photo=open(IMAGE_PATH, 'rb'),
+            caption=(
+                "<b>Спасибо!</b> У меня уже сложилась картинка по твоему запросу по авто 🙌\n\n"
+                "Как и обещали — за прохождение опроса ты получаешь <b>подарок на выбор</b>, "
+                "который можно использовать при оформлении привоза авто из Кореи 🎁\n\n"
+                "<i>Выбери, что тебе интереснее, и перешли это сообщение менеджеру:</i>\n"
+                "<b>@Asia_alliance_manager2</b>"
+            ),
+            reply_markup=keyboards.menu,
+            parse_mode='HTML'
+        )
 
 
 
