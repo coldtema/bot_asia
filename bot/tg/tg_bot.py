@@ -34,7 +34,7 @@ if os.getenv('DEBUG'):
     PDF_PATH = 'Asia_Alliance.pdf'
     IMAGE_PATH = 'survey.png'
 else:
-    PDF_PATH = '/root/bot_asia/Asia_Alliance.pdf'
+    PDF_PATH = '/root/bot_asia/Asia_Alliance_160hp.pdf'
     IMAGE_PATH = '/root/bot_asia/survey.png'
 bot = telebot.TeleBot(BOT_TOKEN)
 
